@@ -14,7 +14,7 @@
 - [x] Alibaba Cloud Function Compute deployment and public HTTP health check
 - [x] Public demo access with an application-level access-code gate and 16 KB request cap
 - [x] Durable deployed memory store: CockroachDB state survives new store instances; Alibaba Function Compute hosts the Qwen API
-- [ ] Public GitHub repository with setup and test instructions
+- [x] Public GitHub repository with setup and test instructions
 - [ ] Three-minute-or-less public video showing real Qwen mode, cross-session recall, a pending conflicting revision, and human authorization
 - [ ] Devpost English description, Qwen Track 1 selection, deployment-proof source-file link, architecture image, and testing URL
 - [ ] Optional build-log/social post for the blog-post prize
