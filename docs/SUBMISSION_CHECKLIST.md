@@ -11,7 +11,8 @@
 ## Required before submission
 
 - [x] Qwen Cloud API key and a recorded successful real invocation
-- [ ] Alibaba Cloud Function Compute deployment with a public test URL
+- [x] Alibaba Cloud Function Compute deployment boot check (Node.js 22 custom runtime, 2026-07-19)
+- [ ] Public demo access with abuse controls; the current HTTP trigger remains signed to protect Qwen quota
 - [ ] Durable Alibaba-backed memory store for the deployed service; the local JSON store is development-only
 - [ ] Public GitHub repository with setup and test instructions
 - [ ] Three-minute-or-less public video showing real Qwen mode, cross-session recall, a pending conflicting revision, and human authorization
@@ -21,5 +22,5 @@
 ## Non-claims
 
 - Mock mode is not Qwen evidence.
-- Local JSON persistence is not a production deployment.
+- The current Function Compute `/tmp` store is not durable across cold starts; do not claim production persistence until a durable backend is added.
 - This agent demonstrates a focused judgment-memory workflow; it does not prove FlowGrid user adoption or replace the local-first core.

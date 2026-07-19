@@ -62,7 +62,9 @@ The evaluation asserts that a confirmed local-first preference persists across s
 
 ## Deployment status
 
-Alibaba Cloud deployment has not yet been performed. See [infra/README.md](infra/README.md) for the deployment boundary and required persistence change.
+The demo is deployed to Alibaba Cloud Function Compute. Its current `/tmp` store survives while an instance stays warm, but it is not durable across cold starts. See [infra/README.md](infra/README.md) for the persistence boundary.
+
+The current HTTP trigger uses signature authentication to protect the Qwen quota. A publicly shareable demo requires an application-level rate limit or a separate read-only presentation surface before that authentication can be relaxed.
 
 ## Submission readiness
 

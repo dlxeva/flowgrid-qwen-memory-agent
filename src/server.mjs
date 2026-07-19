@@ -8,7 +8,11 @@ import { MemoryAgent } from "./agent.mjs";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const publicDir = join(root, "public");
-const store = await new MemoryStore(process.env.MEMORY_STORE_PATH ?? join(root, "data", "memory-store.json")).init();
+// Function Compute mounts deployed code read-only; /tmp is the writable demo store.
+const defaultStorePath = process.env.FC_SERVER_PORT
+  ? "/tmp/flowgrid-memory-store.json"
+  : join(root, "data", "memory-store.json");
+const store = await new MemoryStore(process.env.MEMORY_STORE_PATH ?? defaultStorePath).init();
 const agent = new MemoryAgent({ store, qwen: new QwenClient() });
 
 function send(response, status, body, contentType = "application/json; charset=utf-8") {
