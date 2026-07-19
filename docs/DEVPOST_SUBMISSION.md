@@ -77,7 +77,7 @@ Qwen Cloud, Alibaba Cloud Function Compute, CockroachDB, Node.js, JavaScript, HT
 5. Ask: `Can I replace the confirmed local-first direction?`
 6. Confirm that the answer uses the authorized memory and that a new conflicting request remains pending until a human authorizes it.
 
-Browser demo URL: fill in the GitHub Pages URL after the Pages deployment completes, with the Function Compute endpoint passed as the `api` query parameter.
+Browser demo URL: `https://dlxeva.github.io/flowgrid-qwen-memory-agent/?api=https%3A%2F%2Fflowgriry-agent-guejtallzx.cn-hangzhou.fcapp.run`
 
 Function Compute API: `https://flowgriry-agent-guejtallzx.cn-hangzhou.fcapp.run`
 
