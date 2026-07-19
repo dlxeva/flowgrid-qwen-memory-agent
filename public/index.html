@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FlowGrid MemoryAgent</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">QWEN CLOUD / MEMORYAGENT</p>
+      <h1>Memory is not authority.</h1>
+      <p class="lede">A Qwen-powered agent that keeps durable judgment across sessions without letting an unreviewed request overwrite the project.</p>
+      <p id="mode" class="notice">Checking runtime mode...</p>
+      <section class="grid">
+        <form id="turn-form" class="card">
+          <h2>1. Add a user turn</h2>
+          <textarea id="turn" rows="6">We prefer local-first storage. Do not overwrite confirmed decisions without approval.</textarea>
+          <button>Extract candidate memory</button>
+          <pre id="turn-output"></pre>
+        </form>
+        <section class="card">
+          <h2>2. Review memory</h2>
+          <div id="memories"></div>
+        </section>
+      </section>
+      <form id="ask-form" class="card ask">
+        <h2>3. Ask in a later session</h2>
+        <input id="question" value="Can I replace the confirmed local-first direction?">
+        <button>Retrieve authorized memory</button>
+        <pre id="answer"></pre>
+      </form>
+      <p class="footnote">The browser only receives confirmed memory for answers. Pending revisions need explicit approval.</p>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

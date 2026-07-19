@@ -1,0 +1,25 @@
+edition: 3.0.0
+name: flowgrid-qwen-memory-agent
+access: default
+
+# Alibaba Cloud Function Compute deployment manifest.
+# Before deployment, configure Serverless Devs credentials and set
+# DASHSCOPE_API_KEY in Function Compute's encrypted environment variables.
+vars:
+  region: cn-hangzhou
+
+resources:
+  memoryAgent:
+    component: fc3
+    props:
+      region: ${vars.region}
+      functionName: flowgrid-qwen-memory-agent
+      description: Qwen-powered persistent judgment memory for the Qwen Cloud hackathon
+      runtime: custom.debian10
+      timeout: 60
+      memorySize: 512
+      code: ../
+      handler: bootstrap
+      environmentVariables:
+        QWEN_MODEL: qwen3.7-plus
+        QWEN_BASE_URL: https://dashscope-intl.aliyuncs.com/compatible-mode/v1

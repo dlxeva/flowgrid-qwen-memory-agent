@@ -1,0 +1,16 @@
+{
+  "name": "flowgrid-qwen-memory-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A Qwen-powered MemoryAgent that preserves authorized human judgment across sessions.",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env src/server.mjs",
+    "test": "node --test",
+    "demo": "DEMO_MODE=mock node scripts/demo.mjs",
+    "evaluate": "DEMO_MODE=mock node scripts/evaluate.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

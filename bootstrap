@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+# Function Compute supplies FC_SERVER_PORT for custom runtimes.
+export PORT="${FC_SERVER_PORT:-9000}"
+exec node src/server.mjs
