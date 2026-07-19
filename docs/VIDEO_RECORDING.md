@@ -2,12 +2,13 @@
 
 ## Goal
 
-Record one uninterrupted, real deployment demo under three minutes. Do not show
-the access code, database URL, or API keys.
+Record one uninterrupted, real browser demo under three minutes. Do not show
+the access code, database URL, API keys, or unrelated desktop content. No
+personal camera or additional voice recording is required.
 
 ## Setup
 
-1. Open `https://flowgriry-agent-guejtallzx.cn-hangzhou.fcapp.run/` in a normal browser window.
+1. Open `https://dlxeva.github.io/flowgrid-qwen-memory-agent/?api=https%3A%2F%2Fflowgriry-agent-guejtallzx.cn-hangzhou.fcapp.run` in a normal browser window.
 2. Use the private access code from the local `.env` file. Type it while the recording is paused or crop that portion.
 3. Start with an unused project slug, for example `hackathon-demo-20260720`.
 
@@ -63,4 +64,3 @@ FlowGrid MemoryAgent preserves what an agent is allowed to act on, not merely wh
 | 1:05-1:30 | Extract conflicting request as pending |
 | 1:30-1:55 | Ask Qwen what is authorized |
 | 1:55-2:15 | Brief architecture close: Qwen, FC, CockroachDB |
-
