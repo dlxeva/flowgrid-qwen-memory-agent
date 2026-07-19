@@ -1,0 +1,19 @@
+Memory is not authority.
+
+Long-running agent work does not fail only because the model forgets a message. It fails when a new request, an old decision, and a partial summary are treated as the same kind of thing.
+
+FlowGrid MemoryAgent gives those states different rights.
+
+In this first session, a user states two durable constraints: prefer local-first storage, and do not overwrite a confirmed decision without approval. Qwen reads the turn and extracts candidate memories. Notice their status: pending. Qwen may suggest what should be remembered, but it cannot silently turn that suggestion into project authority.
+
+The owner reviews the candidates and authorizes the local-first direction. Only then does that memory become confirmed. The authorization event is stored with the memory, so a later session can distinguish a human-approved direction from an unreviewed model inference.
+
+Now the project receives a conflicting request: switch to cloud-first immediately. A normal chat summary might replace the previous preference because the newest request sounds decisive. FlowGrid does not do that. Qwen records a pending revision, while the confirmed local-first judgment remains current.
+
+In a later session, the agent is asked whether it can replace the confirmed direction. Retrieval is constrained to authorized memory. Qwen returns the confirmed local-first judgment, explains why it is still active, and says that the proposed revision needs human review.
+
+This is the difference between memory and authority. The system keeps raw turns, candidate memories, approval events, revisions, and retrieval evidence as separate lifecycle records. That makes the current project state small enough for an agent to use, while leaving the reasoning path inspectable for a person.
+
+Qwen provides extraction and constrained reasoning. Alibaba Cloud Function Compute hosts the runtime. CockroachDB persists the lifecycle across sessions.
+
+FlowGrid MemoryAgent does not try to remember everything. It preserves what an agent is currently allowed to act on.
