@@ -22,7 +22,10 @@ const maxRequestBytes = 16 * 1024;
 function send(response, status, body, contentType = "application/json; charset=utf-8") {
   response.writeHead(status, {
     "Content-Type": contentType,
-    "Cache-Control": "no-store"
+    "Cache-Control": "no-store",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type, X-FlowGrid-Demo-Code",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
   });
   response.end(typeof body === "string" ? body : JSON.stringify(body, null, 2));
 }
@@ -53,6 +56,7 @@ function isAuthorizedDemoRequest(request) {
 const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url, "http://localhost");
+    if (request.method === "OPTIONS") return send(response, 204, "", "text/plain; charset=utf-8");
     if (request.method === "GET" && url.pathname === "/health") return send(response, 200, { ok: true, mode: agent.qwen.mode, model: agent.qwen.model });
     if (request.method === "GET" && url.pathname === "/") return send(response, 200, await readFile(join(publicDir, "index.html"), "utf8"), "text/html; charset=utf-8");
     if (request.method === "GET" && url.pathname === "/app.js") return send(response, 200, await readFile(join(publicDir, "app.js"), "utf8"), "text/javascript; charset=utf-8");

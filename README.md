@@ -26,7 +26,7 @@ User turn
   -> constrained retrieval for a future Qwen answer
 ```
 
-The browser demo exposes the lifecycle: add a user turn, authorize its candidate memory, then ask a later-session question. Pending revisions are visible but never used to answer. Its public API is protected by an application-level access code; the code belongs only in private evaluator instructions.
+The browser demo exposes the lifecycle: add a user turn, authorize its candidate memory, then ask a later-session question. Pending revisions are visible but never used to answer. Its public API is protected by an application-level access code; the code belongs only in private evaluator instructions. The static browser client is hosted separately from the Function Compute API because FC's default public domain forces HTML responses to download.
 
 ![Architecture](docs/architecture.svg)
 
@@ -68,7 +68,7 @@ The public HTTP trigger is intentionally anonymous so evaluators can open the de
 
 ## Evaluator testing
 
-1. Open the demo URL supplied in the hackathon submission.
+1. Open the browser demo URL supplied in the hackathon submission.
 2. Enter the access code supplied in the private testing instructions.
 3. Add a durable judgment, approve its pending candidate, then ask a later-session question.
 4. Confirm that a pending candidate is never retrieved until approval.

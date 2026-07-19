@@ -7,7 +7,7 @@ Date: 2026-07-20
 - **Alibaba Cloud Function Compute:** `flowgrid-qwen-memory-agent`, Hangzhou region, custom Debian 12 / Node.js 22 runtime.
 - **Qwen Cloud:** `qwen3.7-plus` through the DashScope OpenAI-compatible endpoint.
 - **Durable state:** CockroachDB, selected by `DATABASE_URL`; the deployment uses `DATABASE_HOSTADDR` only as a DNS fallback while retaining the original hostname for TLS validation.
-- **Public demo:** the Function Compute HTTP trigger is anonymous, but every `/api/*` operation requires the private `DEMO_ACCESS_CODE` header and request bodies are limited to 16 KB.
+- **Public demo API:** the Function Compute HTTP trigger is anonymous, but every `/api/*` operation requires the private `DEMO_ACCESS_CODE` header and request bodies are limited to 16 KB. The browser client is deployed separately because FC's default public domain forces HTML responses to download.
 
 ## Live Checks
 

@@ -42,7 +42,7 @@ Live verification evidence: `docs/DEPLOYMENT_EVIDENCE.md`
 
 ## Challenges We Ran Into
 
-The Function Compute region could not resolve the CockroachDB endpoint through its default DNS path, even though public egress was enabled. We kept the database hostname as the TLS authority and introduced a deployment-only `DATABASE_HOSTADDR` fallback for the current resolved endpoint IP. This retained certificate validation while avoiding a new NAT or VPC resource.
+The Function Compute region could not resolve the CockroachDB endpoint through its default DNS path, even though public egress was enabled. We kept the database hostname as the TLS authority and introduced a deployment-only `DATABASE_HOSTADDR` fallback for the current resolved endpoint IP. This retained certificate validation while avoiding a new NAT or VPC resource. FC's default public domain also forces HTML downloads, so the browser client is served separately while the Function Compute endpoint remains the deployed Qwen API.
 
 The other challenge was safety versus testability. The Function Compute HTTP trigger is anonymous so a judge can reach the demo, but every API request requires an application-level access code. The repository never contains the Qwen key, database URL, or evaluator code.
 
@@ -77,7 +77,9 @@ Qwen Cloud, Alibaba Cloud Function Compute, CockroachDB, Node.js, JavaScript, HT
 5. Ask: `Can I replace the confirmed local-first direction?`
 6. Confirm that the answer uses the authorized memory and that a new conflicting request remains pending until a human authorizes it.
 
-Demo URL: `https://flowgriry-agent-guejtallzx.cn-hangzhou.fcapp.run`
+Browser demo URL: fill in the GitHub Pages URL after the Pages deployment completes, with the Function Compute endpoint passed as the `api` query parameter.
+
+Function Compute API: `https://flowgriry-agent-guejtallzx.cn-hangzhou.fcapp.run`
 
 Do not put the access code in the public repository or video.
 

@@ -1,4 +1,5 @@
 const slug = "demo-project";
+const apiBase = (new URLSearchParams(window.location.search).get("api") ?? window.location.origin).replace(/\/$/, "");
 const accessCode = document.querySelector("#access-code");
 accessCode.value = sessionStorage.getItem("flowgrid-demo-code") ?? "";
 accessCode.addEventListener("input", () => sessionStorage.setItem("flowgrid-demo-code", accessCode.value.trim()));
@@ -10,7 +11,7 @@ const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (character) => (
   "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#039;", "\"": "&quot;"
 }[character]));
 
-const request = (path, options = {}) => fetch(path, {
+const request = (path, options = {}) => fetch(`${apiBase}${path}`, {
   ...options,
   headers: {
     "Content-Type": "application/json",
