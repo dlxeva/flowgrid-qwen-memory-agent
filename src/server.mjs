@@ -16,6 +16,8 @@ const store = await createMemoryStore({
   filePath: process.env.MEMORY_STORE_PATH ?? defaultStorePath
 });
 const agent = new MemoryAgent({ store, qwen: new QwenClient() });
+const demoAccessCode = process.env.DEMO_ACCESS_CODE?.trim();
+const maxRequestBytes = 16 * 1024;
 
 function send(response, status, body, contentType = "application/json; charset=utf-8") {
   response.writeHead(status, { "Content-Type": contentType, "Cache-Control": "no-store" });
@@ -24,12 +26,25 @@ function send(response, status, body, contentType = "application/json; charset=u
 
 async function body(request) {
   const chunks = [];
-  for await (const chunk of request) chunks.push(chunk);
+  let size = 0;
+  for await (const chunk of request) {
+    size += chunk.length;
+    if (size > maxRequestBytes) {
+      const error = new Error("Request body exceeds the 16 KB demo limit");
+      error.status = 413;
+      throw error;
+    }
+    chunks.push(chunk);
+  }
   return JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
 }
 
 function projectRoute(pathname) {
   return pathname.match(/^\/api\/projects\/([^/]+)\/(turns|memory|ask)$/);
+}
+
+function isAuthorizedDemoRequest(request) {
+  return !demoAccessCode || request.headers["x-flowgrid-demo-code"] === demoAccessCode;
 }
 
 const server = createServer(async (request, response) => {
@@ -39,6 +54,10 @@ const server = createServer(async (request, response) => {
     if (request.method === "GET" && url.pathname === "/") return send(response, 200, await readFile(join(publicDir, "index.html"), "utf8"), "text/html; charset=utf-8");
     if (request.method === "GET" && url.pathname === "/app.js") return send(response, 200, await readFile(join(publicDir, "app.js"), "utf8"), "text/javascript; charset=utf-8");
     if (request.method === "GET" && url.pathname === "/styles.css") return send(response, 200, await readFile(join(publicDir, "styles.css"), "utf8"), "text/css; charset=utf-8");
+
+    if (url.pathname.startsWith("/api/") && !isAuthorizedDemoRequest(request)) {
+      return send(response, 401, { error: "Demo access code required" });
+    }
 
     const approveMatch = url.pathname.match(/^\/api\/projects\/([^/]+)\/memories\/([^/]+)\/approve$/);
     if (request.method === "POST" && approveMatch) {
@@ -59,7 +78,7 @@ const server = createServer(async (request, response) => {
     }
     return send(response, 404, { error: "Not found" });
   } catch (error) {
-    return send(response, 500, { error: error.message });
+    return send(response, error.status ?? 500, { error: error.message });
   }
 });
 
