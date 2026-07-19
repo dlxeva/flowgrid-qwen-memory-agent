@@ -2,6 +2,9 @@ const slug = "demo-project";
 const accessCode = document.querySelector("#access-code");
 accessCode.value = sessionStorage.getItem("flowgrid-demo-code") ?? "";
 accessCode.addEventListener("input", () => sessionStorage.setItem("flowgrid-demo-code", accessCode.value.trim()));
+accessCode.addEventListener("change", () => {
+  refresh().catch((error) => { document.querySelector("#memories").textContent = error.message; });
+});
 
 const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (character) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#039;", "\"": "&quot;"
