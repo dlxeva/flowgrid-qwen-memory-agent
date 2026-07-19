@@ -1,5 +1,7 @@
-const slug = "demo-project";
-const apiBase = (new URLSearchParams(window.location.search).get("api") ?? window.location.origin).replace(/\/$/, "");
+const params = new URLSearchParams(window.location.search);
+// A query-scoped project keeps recorded demos reproducible without polluting the default evaluator project.
+const slug = params.get("project") ?? "demo-project";
+const apiBase = (params.get("api") ?? window.location.origin).replace(/\/$/, "");
 const accessCode = document.querySelector("#access-code");
 accessCode.value = sessionStorage.getItem("flowgrid-demo-code") ?? "";
 accessCode.addEventListener("input", () => sessionStorage.setItem("flowgrid-demo-code", accessCode.value.trim()));
