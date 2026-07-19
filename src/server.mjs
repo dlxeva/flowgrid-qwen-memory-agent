@@ -22,9 +22,7 @@ const maxRequestBytes = 16 * 1024;
 function send(response, status, body, contentType = "application/json; charset=utf-8") {
   response.writeHead(status, {
     "Content-Type": contentType,
-    "Cache-Control": "no-store",
-    // Function Compute otherwise defaults HTML responses to downloads.
-    "Content-Disposition": "inline"
+    "Cache-Control": "no-store"
   });
   response.end(typeof body === "string" ? body : JSON.stringify(body, null, 2));
 }

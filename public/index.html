@@ -20,7 +20,7 @@
           <h2>1. Add a user turn</h2>
           <textarea id="turn" rows="6">We prefer local-first storage. Do not overwrite confirmed decisions without approval.</textarea>
           <button>Extract candidate memory</button>
-          <pre id="turn-output"></pre>
+          <div id="turn-output" class="result" aria-live="polite"></div>
         </form>
         <section class="card">
           <h2>2. Review memory</h2>
@@ -31,7 +31,7 @@
         <h2>3. Ask in a later session</h2>
         <input id="question" value="Can I replace the confirmed local-first direction?">
         <button>Retrieve authorized memory</button>
-        <pre id="answer"></pre>
+        <div id="answer" class="result" aria-live="polite"></div>
       </form>
       <p class="footnote">The browser only receives confirmed memory for answers. Pending revisions need explicit approval.</p>
     </main>

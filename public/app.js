@@ -41,14 +41,26 @@ async function refresh() {
 document.querySelector("#turn-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   const result = await request(`/api/projects/${slug}/turns`, { method: "POST", body: JSON.stringify({ text: document.querySelector("#turn").value }) });
-  document.querySelector("#turn-output").textContent = JSON.stringify(result, null, 2);
+  const candidates = result.candidates ?? [];
+  document.querySelector("#turn-output").innerHTML = `
+    <section class="receipt pending">
+      <h3>Qwen extracted ${candidates.length} candidate ${candidates.length === 1 ? "memory" : "memories"}</h3>
+      <p>They remain pending until an owner authorizes them.</p>
+      <small>${candidates.map((candidate) => `${escapeHtml(candidate.id)}: ${escapeHtml(candidate.text)}`).join("<br>")}</small>
+    </section>`;
   refresh();
 });
 
 document.querySelector("#ask-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   const result = await request(`/api/projects/${slug}/ask`, { method: "POST", body: JSON.stringify({ question: document.querySelector("#question").value }) });
-  document.querySelector("#answer").textContent = JSON.stringify(result, null, 2);
+  const memoryIds = result.usedMemoryIds?.length ? result.usedMemoryIds.map(escapeHtml).join(", ") : "none";
+  document.querySelector("#answer").innerHTML = `
+    <section class="receipt">
+      <h3>Authorized memory response</h3>
+      <p>${escapeHtml(result.answer)}</p>
+      <small>Retrieved: ${memoryIds}${result.needsHumanReview ? " · Human review needed" : ""}</small>
+    </section>`;
 });
 
 request("/health").then((health) => { document.querySelector("#mode").textContent = `Runtime: ${health.mode} / ${health.model}`; });
