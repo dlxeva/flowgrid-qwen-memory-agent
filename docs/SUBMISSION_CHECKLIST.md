@@ -10,7 +10,7 @@
 
 ## Required before submission
 
-- [ ] Qwen Cloud account, pay-as-you-go API key, and a recorded successful real invocation
+- [x] Qwen Cloud API key and a recorded successful real invocation
 - [ ] Alibaba Cloud Function Compute deployment with a public test URL
 - [ ] Durable Alibaba-backed memory store for the deployed service; the local JSON store is development-only
 - [ ] Public GitHub repository with setup and test instructions

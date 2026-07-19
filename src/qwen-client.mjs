@@ -36,12 +36,16 @@ export class QwenClient {
       },
       body: JSON.stringify({
         model: this.model,
+        // This agent needs bounded structured extraction, not an unbounded reasoning trace.
+        enable_thinking: false,
+        max_tokens: 700,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: system },
           { role: "user", content: prompt }
         ]
-      })
+      }),
+      signal: AbortSignal.timeout(30_000)
     });
 
     const payload = await response.json();

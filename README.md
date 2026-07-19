@@ -48,7 +48,7 @@ unset DEMO_MODE
 npm run dev
 ```
 
-Qwen Cloud uses an OpenAI-compatible endpoint by default. The local `DEMO_MODE=mock` fallback exists only to test the authorization lifecycle before credentials are available. It must not be used as proof of Qwen integration in a hackathon submission.
+Qwen Cloud uses an OpenAI-compatible endpoint by default. A real Qwen lifecycle has been verified; see [validation evidence](docs/REAL_QWEN_VALIDATION.md). The local `DEMO_MODE=mock` fallback exists only to test the authorization lifecycle before credentials are available. It must not be used as proof of Qwen integration in a hackathon submission.
 
 ## Verification
 
