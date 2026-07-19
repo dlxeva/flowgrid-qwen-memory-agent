@@ -15,7 +15,7 @@ resources:
       region: ${vars.region}
       functionName: flowgrid-qwen-memory-agent
       description: Qwen-powered persistent judgment memory for the Qwen Cloud hackathon
-      runtime: custom.debian10
+      runtime: custom.debian12
       timeout: 60
       memorySize: 512
       code: ../
@@ -23,3 +23,5 @@ resources:
       environmentVariables:
         QWEN_MODEL: qwen3.7-plus
         QWEN_BASE_URL: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+        # Configure DASHSCOPE_API_KEY and DATABASE_URL in encrypted function
+        # environment variables; never commit either secret here.

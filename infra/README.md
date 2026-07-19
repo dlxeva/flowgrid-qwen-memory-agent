@@ -6,7 +6,7 @@ Before deployment:
 
 1. Create a Function Compute service and configure Serverless Devs credentials.
 2. Put `DASHSCOPE_API_KEY` into the function's encrypted environment variables; never put it in this repository or the manifest.
-3. The current Function Compute demo writes to `/tmp` because deployed code is read-only. This supports a single warm-instance demo only; it is not durable across cold starts. Add an Alibaba Cloud persistence service before making a durable-memory claim in a public judging deployment.
+3. Configure a CockroachDB-compatible `DATABASE_URL` in the encrypted function environment variables. Without it, the function writes to `/tmp`, which supports a warm-instance demo only and is not durable across cold starts.
 4. Deploy, then record the live URL and deployment proof in `README.md`.
 
 ## Current demo deployment

@@ -2,7 +2,7 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { MemoryStore } from "./memory-store.mjs";
+import { createMemoryStore } from "./store-factory.mjs";
 import { QwenClient } from "./qwen-client.mjs";
 import { MemoryAgent } from "./agent.mjs";
 
@@ -12,7 +12,9 @@ const publicDir = join(root, "public");
 const defaultStorePath = process.env.FC_SERVER_PORT
   ? "/tmp/flowgrid-memory-store.json"
   : join(root, "data", "memory-store.json");
-const store = await new MemoryStore(process.env.MEMORY_STORE_PATH ?? defaultStorePath).init();
+const store = await createMemoryStore({
+  filePath: process.env.MEMORY_STORE_PATH ?? defaultStorePath
+});
 const agent = new MemoryAgent({ store, qwen: new QwenClient() });
 
 function send(response, status, body, contentType = "application/json; charset=utf-8") {
