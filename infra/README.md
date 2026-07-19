@@ -6,7 +6,7 @@ Before deployment:
 
 1. Create a Function Compute service and configure Serverless Devs credentials.
 2. Put `DASHSCOPE_API_KEY` into the function's encrypted environment variables; never put it in this repository or the manifest.
-3. Configure a CockroachDB-compatible `DATABASE_URL` in the encrypted function environment variables. Without it, the function writes to `/tmp`, which supports a warm-instance demo only and is not durable across cold starts.
+3. Configure a CockroachDB-compatible `DATABASE_URL` in the encrypted function environment variables. Without it, the function writes to `/tmp`, which supports a warm-instance demo only and is not durable across cold starts. If the Function Compute runtime cannot resolve the database hostname, add `DATABASE_HOSTADDR` with a current endpoint IP while keeping `DATABASE_URL` for TLS validation.
 4. Deploy, then record the live URL and deployment proof in `README.md`.
 
 ## Current demo deployment

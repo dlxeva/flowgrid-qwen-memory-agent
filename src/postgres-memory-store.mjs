@@ -9,12 +9,15 @@ const initialState = () => ({ schemaVersion: 1, projects: {} });
  * between local and deployed runs.
  */
 export class PostgresMemoryStore extends MemoryStore {
-  constructor(connectionString) {
+  constructor(connectionString, { hostaddr = process.env.DATABASE_HOSTADDR } = {}) {
     super("postgres://flowgrid-memory-state");
+    const databaseHost = new URL(connectionString).hostname;
     this.pool = new Pool({
       connectionString,
-      // CockroachDB Cloud uses TLS; its connection URL selects the target host.
-      ssl: { rejectUnauthorized: false }
+      // A Function Compute region can lack DNS for a foreign Cockroach endpoint.
+      // Connect to an explicitly supplied IP while retaining the hostname for TLS.
+      ...(hostaddr ? { host: hostaddr } : {}),
+      ssl: { rejectUnauthorized: false, servername: databaseHost }
     });
   }
 

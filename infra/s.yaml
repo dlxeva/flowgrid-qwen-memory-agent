@@ -23,5 +23,6 @@ resources:
       environmentVariables:
         QWEN_MODEL: qwen3.7-plus
         QWEN_BASE_URL: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
-        # Configure DASHSCOPE_API_KEY and DATABASE_URL in encrypted function
+        # Configure DASHSCOPE_API_KEY, DATABASE_URL, and (if DNS requires it)
+        # DATABASE_HOSTADDR in encrypted function
         # environment variables; never commit either secret here.
