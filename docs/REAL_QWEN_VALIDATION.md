@@ -14,4 +14,4 @@ The project made a live request to Qwen Cloud using the OpenAI-compatible Chat C
 
 ## Boundary
 
-This verifies the real Qwen model integration and the agent's status-gated retrieval behavior. It does not verify Alibaba Cloud deployment or production-grade cloud persistence.
+This verifies the real Qwen model integration and the agent's status-gated retrieval behavior. The deployed Function Compute lifecycle is separately recorded in [DEPLOYMENT_EVIDENCE.md](DEPLOYMENT_EVIDENCE.md).

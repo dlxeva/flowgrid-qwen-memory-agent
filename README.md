@@ -11,7 +11,7 @@ The existing FlowGrid project is a local-first ledger and host protocol. This re
 - Qwen Cloud performs structured memory extraction and answer synthesis.
 - The agent maintains sources, candidate status, confirmation state, and supersession metadata across sessions.
 - A conflicting request becomes a pending revision instead of silently overwriting confirmed judgment.
-- The deployed version will run on Alibaba Cloud Function Compute.
+- The deployed API runs on Alibaba Cloud Function Compute, while CockroachDB stores the durable state.
 
 This repository does **not** claim that the existing FlowGrid product has moved to the cloud.
 
@@ -26,7 +26,7 @@ User turn
   -> constrained retrieval for a future Qwen answer
 ```
 
-The browser demo exposes the lifecycle: add a user turn, authorize its candidate memory, then ask a later-session question. Pending revisions are visible but never used to answer.
+The browser demo exposes the lifecycle: add a user turn, authorize its candidate memory, then ask a later-session question. Pending revisions are visible but never used to answer. Its public API is protected by an application-level access code; the code belongs only in private evaluator instructions.
 
 ![Architecture](docs/architecture.svg)
 
@@ -64,11 +64,20 @@ The evaluation asserts that a confirmed local-first preference persists across s
 
 The demo is deployed to Alibaba Cloud Function Compute. With `DATABASE_URL` unset, its `/tmp` store survives only while an instance stays warm. Configure a CockroachDB-compatible `DATABASE_URL` to persist the exact same judgment state across Function Compute cold starts. If the runtime cannot resolve the CockroachDB hostname, set `DATABASE_HOSTADDR` to a current endpoint IP; TLS still validates the hostname in `DATABASE_URL`. See [infra/README.md](infra/README.md) for the persistence boundary.
 
-The current HTTP trigger uses signature authentication to protect the Qwen quota. A publicly shareable demo requires an application-level rate limit or a separate read-only presentation surface before that authentication can be relaxed.
+The public HTTP trigger is intentionally anonymous so evaluators can open the demo. Every `/api/*` route requires the `DEMO_ACCESS_CODE` header, and request bodies are capped at 16 KB. Keep the access code in private evaluator instructions, never in this repository.
+
+## Evaluator testing
+
+1. Open the demo URL supplied in the hackathon submission.
+2. Enter the access code supplied in the private testing instructions.
+3. Add a durable judgment, approve its pending candidate, then ask a later-session question.
+4. Confirm that a pending candidate is never retrieved until approval.
+
+The deployed verification record and source-file links are in [deployment evidence](docs/DEPLOYMENT_EVIDENCE.md).
 
 ## Submission readiness
 
-See [the checklist](docs/SUBMISSION_CHECKLIST.md). The local lifecycle works in mock mode; real Qwen Cloud invocation and Alibaba Cloud deployment remain required before a valid submission.
+See [the checklist](docs/SUBMISSION_CHECKLIST.md). Mock mode remains development-only; real Qwen and deployed lifecycle evidence are recorded separately.
 
 ## License
 
