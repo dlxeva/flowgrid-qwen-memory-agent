@@ -8,7 +8,7 @@ personal camera or additional voice recording is required.
 
 ## Setup
 
-1. Open `https://dlxeva.github.io/flowgrid-qwen-memory-agent/?api=https%3A%2F%2Fflowgriry-agent-guejtallzx.cn-hangzhou.fcapp.run` in a normal browser window.
+1. Open the deployed browser demo URL from the private judging instructions in a normal browser window. Its API origin is fixed at deployment time rather than supplied through a query parameter.
 2. Use the private access code from the local `.env` file. Type it while the recording is paused or crop that portion.
 3. Start with an unused project slug, for example `hackathon-demo-20260720`.
 

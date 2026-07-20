@@ -19,6 +19,10 @@ const agent = new MemoryAgent({ store, qwen: new QwenClient() });
 const demoAccessCode = process.env.DEMO_ACCESS_CODE?.trim();
 const maxRequestBytes = 16 * 1024;
 
+if (!demoAccessCode) {
+  throw new Error("DEMO_ACCESS_CODE is required before starting the HTTP runtime.");
+}
+
 function send(response, status, body, contentType = "application/json; charset=utf-8") {
   response.writeHead(status, {
     "Content-Type": contentType,
@@ -50,7 +54,7 @@ function projectRoute(pathname) {
 }
 
 function isAuthorizedDemoRequest(request) {
-  return !demoAccessCode || request.headers["x-flowgrid-demo-code"] === demoAccessCode;
+  return Boolean(demoAccessCode) && request.headers["x-flowgrid-demo-code"] === demoAccessCode;
 }
 
 const server = createServer(async (request, response) => {
@@ -70,7 +74,9 @@ const server = createServer(async (request, response) => {
     if (request.method === "POST" && approveMatch) {
       const [, slug, memoryId] = approveMatch;
       const { replacesMemoryId = null } = await body(request);
-      return send(response, 200, { memory: await store.approveMemory(slug, memoryId, replacesMemoryId) });
+      const memory = await store.approveMemory(slug, memoryId, replacesMemoryId);
+      if (!memory) return send(response, 404, { error: "Memory not found" });
+      return send(response, 200, { memory });
     }
 
     const match = projectRoute(url.pathname);

@@ -1,7 +1,9 @@
 const params = new URLSearchParams(window.location.search);
 // A query-scoped project keeps recorded demos reproducible without polluting the default evaluator project.
 const slug = params.get("project") ?? "demo-project";
-const apiBase = (params.get("api") ?? window.location.origin).replace(/\/$/, "");
+// API routing is deploy-time configuration, never an untrusted query parameter.
+// This prevents a shared demo URL from exfiltrating the evaluator access code.
+const apiBase = (document.documentElement.dataset.apiBase || window.location.origin).replace(/\/$/, "");
 const accessCode = document.querySelector("#access-code");
 accessCode.value = sessionStorage.getItem("flowgrid-demo-code") ?? "";
 accessCode.addEventListener("input", () => sessionStorage.setItem("flowgrid-demo-code", accessCode.value.trim()));
@@ -33,10 +35,16 @@ async function refresh() {
       <small>${escapeHtml(memory.id)} / ${escapeHtml(memory.kind)} / ${escapeHtml(memory.status)}</small>
       <p>${escapeHtml(memory.text)}</p>
       <small>${escapeHtml(memory.reviewReason)}</small>
-      ${memory.status === "pending" ? `<button data-id="${memory.id}">Authorize memory</button>` : ""}
+      ${memory.status === "pending" ? `<button data-id="${memory.id}" data-kind="${memory.kind}">Authorize memory</button>` : ""}
     </article>`).join("") : "<p>No memories yet.</p>";
   document.querySelectorAll("[data-id]").forEach((button) => button.addEventListener("click", async () => {
-    await request(`/api/projects/${slug}/memories/${button.dataset.id}/approve`, { method: "POST", body: JSON.stringify({}) });
+    const confirmed = memories.filter((memory) => memory.status === "confirmed");
+    let replacesMemoryId = null;
+    if (button.dataset.kind === "revision") {
+      replacesMemoryId = window.prompt("Confirmed memory ID to supersede:", confirmed[0]?.id ?? "")?.trim() || null;
+      if (!replacesMemoryId) return;
+    }
+    await request(`/api/projects/${slug}/memories/${button.dataset.id}/approve`, { method: "POST", body: JSON.stringify({ replacesMemoryId }) });
     refresh();
   }));
 }

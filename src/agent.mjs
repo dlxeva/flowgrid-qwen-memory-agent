@@ -30,6 +30,29 @@ function mockAnswer(question, memories) {
   };
 }
 
+const MEMORY_KINDS = new Set(["preference", "judgment", "revision"]);
+const CONFIDENCE_LEVELS = new Set(["low", "medium", "high"]);
+
+function validExtraction(value) {
+  if (!value || !Array.isArray(value.memories)) return [];
+  return value.memories.filter((memory) =>
+    memory &&
+    MEMORY_KINDS.has(memory.kind) &&
+    CONFIDENCE_LEVELS.has(memory.confidence) &&
+    typeof memory.text === "string" &&
+    memory.text.trim().length > 0 &&
+    (memory.expiresWhen == null || typeof memory.expiresWhen === "string") &&
+    (memory.reviewReason == null || typeof memory.reviewReason === "string")
+  );
+}
+
+function validAnswer(value, retrievedIds) {
+  if (!value || typeof value.answer !== "string" || !Array.isArray(value.usedMemoryIds)) return null;
+  if (!value.usedMemoryIds.every((id) => typeof id === "string" && retrievedIds.has(id))) return null;
+  if (typeof value.needsHumanReview !== "boolean" || typeof value.reason !== "string") return null;
+  return value;
+}
+
 export class MemoryAgent {
   constructor({ store, qwen }) {
     this.store = store;
@@ -47,8 +70,7 @@ export class MemoryAgent {
     });
 
     const candidates = [];
-    for (const proposed of extraction.memories ?? []) {
-      if (!proposed.text?.trim()) continue;
+    for (const proposed of validExtraction(extraction)) {
       candidates.push(await this.store.addMemory(slug, {
         ...proposed,
         status: "pending",
@@ -66,6 +88,18 @@ export class MemoryAgent {
       prompt: `Question: ${question}\n\nConfirmed memory (limited context):\n${JSON.stringify(compact)}`,
       fallback: () => mockAnswer(question, memories)
     });
-    return { ...result, memoryBudgetChars: 1800, retrieved: compact, mode: this.qwen.mode };
+    const checked = validAnswer(result, new Set(compact.map((memory) => memory.id)));
+    if (!checked) {
+      return {
+        answer: "The model returned an invalid memory citation, so no answer was accepted.",
+        usedMemoryIds: [],
+        needsHumanReview: true,
+        reason: "Invalid model output.",
+        memoryBudgetChars: 1800,
+        retrieved: compact,
+        mode: this.qwen.mode
+      };
+    }
+    return { ...checked, memoryBudgetChars: 1800, retrieved: compact, mode: this.qwen.mode };
   }
 }

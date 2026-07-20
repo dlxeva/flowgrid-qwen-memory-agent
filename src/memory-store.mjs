@@ -65,6 +65,15 @@ export class MemoryStore {
   async approveMemory(slug, memoryId, replacesMemoryId = null) {
     const item = this.project(slug).memories.find((memory) => memory.id === memoryId);
     if (!item) return null;
+    if (item.status !== "pending") {
+      throw new Error("only pending memories can be authorized");
+    }
+    if (item.kind === "revision" && !replacesMemoryId) {
+      throw new Error("a revision requires replacesMemoryId for the confirmed memory it will supersede");
+    }
+    if (replacesMemoryId === memoryId) {
+      throw new Error("a memory cannot replace itself");
+    }
     if (replacesMemoryId) {
       const previous = this.project(slug).memories.find((memory) => memory.id === replacesMemoryId);
       if (!previous || previous.status !== "confirmed") {
@@ -98,20 +107,29 @@ export class MemoryStore {
   }
 
   relevantMemories(slug, question, maxChars = 1800) {
-    const terms = new Set(question.toLowerCase().match(/[a-z0-9]{3,}/g) ?? []);
+    const hanText = question.match(/[\u4e00-\u9fff]+/g) ?? [];
+    const hanBigrams = hanText.flatMap((run) =>
+      Array.from({ length: Math.max(0, run.length - 1) }, (_, index) => run.slice(index, index + 2))
+    );
+    const terms = new Set([
+      ...(question.toLowerCase().match(/[a-z0-9]{3,}/g) ?? []),
+      ...hanBigrams
+    ]);
+    if (!terms.size) return [];
     const candidates = this.listMemories(slug)
       .filter((memory) => memory.status === "confirmed")
       .map((memory) => ({
         memory,
         score: [...terms].reduce((score, term) => score + Number(memory.text.toLowerCase().includes(term)), 0)
       }))
+      .filter(({ score }) => score > 0)
       .sort((a, b) => b.score - a.score || b.memory.updatedAt.localeCompare(a.memory.updatedAt));
 
     const selected = [];
     let used = 0;
     for (const { memory } of candidates) {
       const size = memory.text.length + 140;
-      if (selected.length && used + size > maxChars) continue;
+      if (used + size > maxChars) continue;
       selected.push(memory);
       used += size;
     }

@@ -64,7 +64,9 @@ The evaluation asserts that a confirmed local-first preference persists across s
 
 The demo is deployed to Alibaba Cloud Function Compute. With `DATABASE_URL` unset, its `/tmp` store survives only while an instance stays warm. Configure a CockroachDB-compatible `DATABASE_URL` to persist the exact same judgment state across Function Compute cold starts. If the runtime cannot resolve the CockroachDB hostname, set `DATABASE_HOSTADDR` to a current endpoint IP; TLS still validates the hostname in `DATABASE_URL`. See [infra/README.md](infra/README.md) for the persistence boundary.
 
-The public HTTP trigger is intentionally anonymous so evaluators can open the demo. Every `/api/*` route requires the `DEMO_ACCESS_CODE` header, and request bodies are capped at 16 KB. Keep the access code in private evaluator instructions, never in this repository.
+The public HTTP trigger is intentionally anonymous so evaluators can open the demo. Every `/api/*` route requires the `DEMO_ACCESS_CODE` header, request bodies are capped at 16 KB, and the HTTP runtime refuses to start without that code. Keep the access code in private evaluator instructions, never in this repository.
+
+The browser never accepts an API endpoint through a URL query parameter. For a separately hosted static client, set its `html[data-api-base]` at deployment time to the approved Function Compute API origin.
 
 ## Evaluator testing
 
